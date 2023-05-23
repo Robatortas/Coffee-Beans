@@ -48,17 +48,20 @@ class Script:
         
         chosenPath = str(values["CHOSEN_PATH"])
 
-        if(event == "DOWNLOAD" and os.path.exists(chosenPath)):
-            downloadLink = values['LINK']
-            print("var downloadLink = " + downloadLink)
+        if(event == "DOWNLOAD"):
+                while(os.path.exists(chosenPath)):
+                    downloadLink = values['LINK']
 
-            print("\nStarting Conversion and Download")
-
-            try:
-                window.set_title(title + " || CONVERTING")
-                warning()
-                yt = YouTube(downloadLink)
-                yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first().download(chosenPath)
-            except ExtractError:
-                print("EXCEPTION")
+                    try:
+                        window.set_title(title + " || CONVERTING")
+                        yt = YouTube(downloadLink)
+                        warning()
+                        print("var downloadLink = " + downloadLink)
+                        print("\nCONVERTING AND DOWNLOADING\n")
+                        yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first().download(chosenPath)
+                    except ExtractError:
+                        print("\nERROR: INVALID YOUTUBE LINK\n")
+                    
+                    break
+                else: print("\nERROR: INVALID PATH\n")
             
