@@ -1,8 +1,10 @@
 # Code by: Robatortas / NoFall
 
-from pytube import YouTube
-
+import os
 import PySimpleGUI as gui
+
+from pytube import YouTube
+from pytube.exceptions import ExtractError
 
 title = "Coffee Beans"
 font = ("Cascadia Code", 40)
@@ -12,7 +14,6 @@ backgroundColor = '#6D5D46'
 gui.theme = backgroundColor
 
 buttonColor = '#917B5D'
-
 layout = [[gui.Text("Coffee Beans", size=(0, 0), key="TITLE", font=font, background_color=backgroundColor)], 
           [gui.Text("Link", background_color=backgroundColor)], 
           [gui.In(size=(25, 1), enable_events=True, key="LINK")], 
@@ -23,24 +24,41 @@ layout = [[gui.Text("Coffee Beans", size=(0, 0), key="TITLE", font=font, backgro
 window = gui.Window(title, layout, margins=margins, background_color=backgroundColor)
 
 class Script:
+
+    def warning():
+        layoutW = [[gui.Text("WARNING: The program will freeze, that's okay!\nDon't fret, I am working hard on converting your video.", key="WARNING_WIN")], [gui.Button("Ok", key="OK_WARN")]]
+
+        window = gui.Window("WARNING", layoutW, modal=True)
+
+        choice = None
+
+        while True:
+            event, values = window.read()
+
+            if event == "Exit" or event == gui.WIN_CLOSED or event == "OK_WARN":
+                break
+
+        
+
+        window.close()
+
     while True:
         event, values = window.read()
         if(event == "Exit" or event == gui.WINDOW_CLOSED): break
         
-        if(event == "DOWNLOAD"):
-            print("DOWNLOAD STARTED")
+        chosenPath = str(values["CHOSEN_PATH"])
 
+        if(event == "DOWNLOAD" and os.path.exists(chosenPath)):
             downloadLink = values['LINK']
             print("var downloadLink = " + downloadLink)
 
-            
-            if(downloadLink != None or not str(downloadLink).startswith("https://www.youtube.com/watch")):
-                print("\nERROR: Not a valid YouTube link.\n")
-            else: print("\nStarting Conversion")
+            print("\nStarting Conversion and Download")
 
-           # window["CHOSEN_PATH"].update(window["CHOSEN_PATH"].get() + "Hey")
-
-            YouTube(downloadLink).streams.first().download()
-            yt = YouTube(downloadLink)
-            yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first().download()
+            try:
+                window.set_title(title + " || CONVERTING")
+                warning()
+                yt = YouTube(downloadLink)
+                yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first().download(chosenPath)
+            except ExtractError:
+                print("EXCEPTION")
             
