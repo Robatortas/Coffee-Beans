@@ -26,19 +26,15 @@ window = gui.Window(title, layout, margins=margins, background_color=backgroundC
 class Script:
 
     def warning(title, text):
-        layoutW = [[gui.Text(text, key="WARNING_WIN")], [gui.Button("Ok", key="OK_WARN")]]
+        layoutWarn = [[gui.Text(text, key="WARNING_WIN", background_color=backgroundColor)], [gui.Button("Ok", key="OK_WARN")]]
 
-        window = gui.Window(title, layoutW, modal=True)
-
-        choice = None
+        window = gui.Window(title, layoutWarn, modal=True, background_color=backgroundColor)
 
         while True:
             event, values = window.read()
 
             if event == "Exit" or event == gui.WIN_CLOSED or event == "OK_WARN":
                 break
-
-        
 
         window.close()
 
