@@ -1,7 +1,6 @@
 # Code by: Robatortas / NoFall
 
 import os
-import sys
 import PySimpleGUI as gui
 
 from pytube import YouTube
