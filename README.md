@@ -12,8 +12,11 @@ Enjoy!
 I only made an executable for Windows, you don't need to install python to run this, just download it and enjoy.
 
 If you want to run the application on Linux or Mac, you will need the following:
+
     - A Python installation : https://www.python.org/
+    
     - Once you have Python installed on your machine, run the following commands on your terminal:
+    
         pip install pytube
         pip install pysimplegui
 
