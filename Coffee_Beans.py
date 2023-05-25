@@ -5,6 +5,7 @@ import PySimpleGUI as gui
 
 from pytube import YouTube
 from pytube.exceptions import ExtractError
+from moviepy.editor import *
 
 title = "Coffee Beans"
 font = ("Cascadia Code", 40)
@@ -17,8 +18,10 @@ buttonColor = '#917B5D'
 layout = [[gui.Text("Coffee Beans", size=(0, 0), key="TITLE", font=font, background_color=backgroundColor)], 
           [gui.Text("Link", background_color=backgroundColor)], 
           [gui.In(size=(25, 1), enable_events=True, key="LINK")], 
-          [gui.Text("Download path", background_color=backgroundColor)], 
+          [gui.Text("Download Path", background_color=backgroundColor)], 
           [gui.In(size=(25, 1), enable_events=True, key="CHOSEN_PATH"), gui.FolderBrowse(button_color=buttonColor, key="BROWSE")],
+          [gui.Text("File Type", background_color=backgroundColor)],
+          [gui.DropDown(list(["mp4", "mp3"]), default_value="mp4", button_background_color=buttonColor, key="FILETYPE")],
           [gui.Button("DOWNLOAD", button_color='#CA8957')]]
 
 window = gui.Window(title, layout, margins=margins, background_color=backgroundColor)
@@ -54,8 +57,15 @@ class Script:
                         warning("WARNING", "WARNING: The program will freeze, that's okay!\nDon't fret, I am working hard on converting your video.")
                         print("var downloadLink = " + downloadLink)
                         print("\nCONVERTING AND DOWNLOADING\n")
-                        yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first().download(chosenPath)
-                    except ExtractError:
+                        filetype = values["FILETYPE"]
+                        print("\nfiletype=" + filetype)
+                        if(filetype == "mp4"):
+                            yt.streams.filter(progressive=True, file_extension=filetype).order_by("resolution").desc().first().download(chosenPath)
+                        else:
+                            yt.streams.filter(only_audio=True).first().download(chosenPath)
+                            os.rename(chosenPath+"/"+yt.title+".mp4", chosenPath+"/"+yt.title+".mp3") #os.path.splitext(yt.title+".mp4")[0]
+                    except ExtractError as e:
+                        print(e)
                         print("\nERROR: INVALID YOUTUBE LINK\n")
                         warning("ERROR", "ERROR: INVALID YOUTUBE LINK.\n\nPLEASE PROMPT A VALID ONE.")
                     
