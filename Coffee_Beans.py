@@ -5,7 +5,6 @@ import PySimpleGUI as gui
 
 from pytube import YouTube
 from pytube.exceptions import ExtractError
-from moviepy.editor import *
 
 title = "Coffee Beans"
 font = ("Cascadia Code", 40)
@@ -69,6 +68,7 @@ class Script:
                         print("\nERROR: INVALID YOUTUBE LINK\n")
                         warning("ERROR", "ERROR: INVALID YOUTUBE LINK.\n\nPLEASE PROMPT A VALID ONE.")
                     
+                    window.set_title(title)
                     break
                 else: 
                     print("\nERROR: INVALID DOWNLOAD PATH\n")
