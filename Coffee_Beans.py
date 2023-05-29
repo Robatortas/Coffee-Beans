@@ -62,6 +62,8 @@ class Script:
                             yt.streams.filter(progressive=True, file_extension=filetype).order_by("resolution").desc().first().download(chosenPath)
                         else:
                             yt.streams.filter(only_audio=True).first().download(chosenPath)
+                              #TODO: Change this line. Since it is not actually converting it to mp3.
+                              # SO USE FFMPEG!!
                             os.rename(chosenPath+"/"+yt.title+".mp4", chosenPath+"/"+yt.title+".mp3") #os.path.splitext(yt.title+".mp4")[0]
                     except ExtractError as e:
                         print(e)
